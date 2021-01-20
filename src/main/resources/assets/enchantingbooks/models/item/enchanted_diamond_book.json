@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "enchantingbooks:item/enchanted_diamond_book"
+  }
+}

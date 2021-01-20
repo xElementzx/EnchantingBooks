@@ -1,12 +1,19 @@
 package me.elementz.enchantingbooks;
 
 import me.elementz.enchantingbooks.item.CustomBookItem;
+import me.elementz.enchantingbooks.item.CustomEnchantedBookItem;
 import me.elementz.enchantingbooks.item.ItemRegistration;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.EnchantmentContainer;
 import net.minecraft.inventory.container.GrindstoneContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -64,35 +71,28 @@ public class EnchantingBooks {
             return;
         }
 
-//        EnchantmentContainer container = (EnchantmentContainer) event.getContainer();
-//        Slot slot = container.inventorySlots.get(0);
-//        Inventory inventory = (Inventory) slot.inventory;
-//        inventory.addListener(invBasic -> {
-//            ItemStack itemStack = invBasic.getStackInSlot(0);
-//            if (!(itemStack.getItem() instanceof CustomBookItem) || !itemStack.isEnchanted()) {
-//                return;
-//            }
-//
-//            Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
-////            ListNBT listnbt = new ListNBT();
-////
-////            for(Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-////                Enchantment enchantment = entry.getKey();
-////                if (enchantment != null) {
-////                    int i = entry.getValue();
-////                    CompoundNBT compoundnbt = new CompoundNBT();
-////                    compoundnbt.putString("id", String.valueOf((Object) Registry.ENCHANTMENT.getKey(enchantment)));
-////                    compoundnbt.putShort("lvl", (short)i);
-////                    listnbt.add(compoundnbt);
-////                    if (itemStack.getItem() instanceof EnchantedBookItem) {
-////                        EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, i));
-////                    }
-////                }
-////            }
-//            ItemStack newItemStackCauseFuckYouMojang = new ItemStack(Items.ENCHANTED_BOOK, 1);
-//            EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(itemStack), newItemStackCauseFuckYouMojang);
-//            invBasic.setInventorySlotContents(0, newItemStackCauseFuckYouMojang);
-//        });
+        EnchantmentContainer container = (EnchantmentContainer) event.getContainer();
+        Slot slot = container.inventorySlots.get(0);
+        Inventory inventory = (Inventory) slot.inventory;
+        inventory.addListener(invBasic -> {
+            ItemStack itemStack = invBasic.getStackInSlot(0);
+            if (!(itemStack.getItem() instanceof CustomBookItem) || !itemStack.isEnchanted()) {
+                return;
+            }
+
+            Map<Enchantment, Integer> enchantments = getEnchantments(itemStack);
+            if (itemStack.getItem() == ItemRegistration.IRON_BOOK.get()) {
+                itemStack = new ItemStack(ItemRegistration.ENCHANTED_IRON_BOOK.get(), 1);
+            } else if (itemStack.getItem() == ItemRegistration.GOLD_BOOK.get()) {
+                itemStack = new ItemStack(ItemRegistration.ENCHANTED_GOLD_BOOK.get(), 1);
+            } else if (itemStack.getItem() == ItemRegistration.DIAMOND_BOOK.get()) {
+                itemStack = new ItemStack(ItemRegistration.ENCHANTED_DIAMOND_BOOK.get(), 1);
+            } else if (itemStack.getItem() == ItemRegistration.NETHERITE_BOOK.get()) {
+                itemStack = new ItemStack(ItemRegistration.ENCHANTED_NETHERITE_BOOK.get(), 1);
+            }
+            setEnchantments(enchantments, itemStack);
+            invBasic.setInventorySlotContents(0, itemStack);
+        });
     }
 
     @SubscribeEvent
@@ -110,125 +110,154 @@ public class EnchantingBooks {
         int j = 0;
         int k = 0;
         boolean flag = false;
-        if (!(itemStackRight.getItem() instanceof CustomBookItem)) {
-            return;
-        }
+        if ((itemStackRight.getItem() instanceof CustomEnchantedBookItem || itemStackLeft.getItem() instanceof CustomEnchantedBookItem)) {
 
-        Map<Enchantment, Integer> enchantmentsLeft = EnchantmentHelper.getEnchantments(itemStackLeft);
-        Map<Enchantment, Integer> enchantmentsRight = EnchantmentHelper.getEnchantments(itemStackRight);
-        if (enchantmentsRight.isEmpty()) {
-            return;
-        }
+            Map<Enchantment, Integer> enchantmentsLeft = getEnchantments(itemStackLeft);
+            Map<Enchantment, Integer> enchantmentsRight = getEnchantments(itemStackRight);
+            if (enchantmentsRight.isEmpty()) {
+                return;
+            }
 
-        flag = itemStackRight.getItem() instanceof CustomBookItem && !enchantmentsRight.isEmpty();
-        ItemStack itemStackOut = itemStackLeft.copy();
-        boolean flag2 = false;
-        boolean flag3 = false;
+            flag = itemStackRight.getItem() instanceof CustomEnchantedBookItem && !enchantmentsRight.isEmpty();
+            ItemStack itemStackOut = itemStackLeft.copy();
+            boolean flag2 = false;
+            boolean flag3 = false;
 
-        j = j + itemStackOut.getRepairCost() + (itemStackRight.isEmpty() ? 0 : itemStackRight.getRepairCost());
+            j = j + itemStackOut.getRepairCost() + (itemStackRight.isEmpty() ? 0 : itemStackRight.getRepairCost());
 
-        for (Enchantment enchantment1 : enchantmentsRight.keySet()) {
-            if (enchantment1 != null) {
-                int i2 = enchantmentsLeft.getOrDefault(enchantment1, 0);
-                int j2 = enchantmentsRight.get(enchantment1);
-                j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
-                boolean flag1 = enchantment1.canApply(itemStackOut);
-                if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomBookItem) {
-                    flag1 = true;
-                }
-
-                for (Enchantment enchantment : enchantmentsLeft.keySet()) {
-                    if (enchantment != enchantment1 && !enchantment1.isCompatibleWith(enchantment)) {
-                        flag1 = false;
-                        ++i;
-                    }
-                }
-
-                if (!flag1) {
-                    flag3 = true;
-                } else {
-                    flag2 = true;
-                    if (j2 > enchantment1.getMaxLevel()) {
-                        j2 = enchantment1.getMaxLevel();
+            for (Enchantment enchantment1 : enchantmentsRight.keySet()) {
+                if (enchantment1 != null) {
+                    int i2 = enchantmentsLeft.getOrDefault(enchantment1, 0);
+                    int j2 = enchantmentsRight.get(enchantment1);
+                    j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
+                    boolean flag1 = enchantment1.canApply(itemStackOut);
+                    if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomEnchantedBookItem) {
+                        flag1 = true;
                     }
 
-                    enchantmentsLeft.put(enchantment1, j2);
-                    int k3 = 0;
-                    switch (enchantment1.getRarity()) {
-                        case COMMON:
-                            k3 = 1;
-                            break;
-                        case UNCOMMON:
-                            k3 = 2;
-                            break;
-                        case RARE:
-                            k3 = 4;
-                            break;
-                        case VERY_RARE:
-                            k3 = 8;
+                    for (Enchantment enchantment : enchantmentsLeft.keySet()) {
+                        if (enchantment != enchantment1 && !enchantment1.isCompatibleWith(enchantment)) {
+                            flag1 = false;
+                            ++i;
+                        }
                     }
 
-                    if (flag) {
-                        k3 = Math.max(1, k3 / 2);
-                    }
+                    if (!flag1) {
+                        flag3 = true;
+                    } else {
+                        flag2 = true;
+                        if (j2 > enchantment1.getMaxLevel()) {
+                            j2 = enchantment1.getMaxLevel();
+                        }
 
-                    i += k3 * j2;
-                    if (itemStackOut.getCount() > 1) {
-                        i = 40;
+                        enchantmentsLeft.put(enchantment1, j2);
+                        int k3 = 0;
+                        switch (enchantment1.getRarity()) {
+                            case COMMON:
+                                k3 = 1;
+                                break;
+                            case UNCOMMON:
+                                k3 = 2;
+                                break;
+                            case RARE:
+                                k3 = 4;
+                                break;
+                            case VERY_RARE:
+                                k3 = 8;
+                        }
+
+                        if (flag) {
+                            k3 = Math.max(1, k3 / 2);
+                        }
+
+                        i += k3 * j2;
+                        if (itemStackOut.getCount() > 1) {
+                            i = 40;
+                        }
                     }
                 }
             }
-        }
-        if (flag3 && !flag2) {
-            return;
-        }
+            if (flag3 && !flag2) {
+                return;
+            }
 
-        if (StringUtils.isBlank(event.getName())) {
-            if (itemStackOut.hasDisplayName()) {
+            if (StringUtils.isBlank(event.getName())) {
+                if (itemStackOut.hasDisplayName()) {
+                    k = 1;
+                    i += k;
+                    itemStackOut.clearCustomName();
+                }
+            } else if (!event.getName().equals(itemStackOut.getDisplayName().getString())) {
                 k = 1;
                 i += k;
-                itemStackOut.clearCustomName();
-            }
-        } else if (!event.getName().equals(itemStackOut.getDisplayName().getString())) {
-            k = 1;
-            i += k;
-            itemStackOut.setDisplayName(new StringTextComponent(event.getName()));
-        }
-
-
-        if (flag && !itemStackOut.isBookEnchantable(itemStackRight)) itemStackOut = ItemStack.EMPTY;
-
-        event.setCost(j + i);
-        if (i <= 0) {
-            itemStackOut = ItemStack.EMPTY;
-        }
-
-        if (k == i && k > 0 && event.getCost() >= 40) {
-            event.setCost(39);
-        }
-
-        if (event.getCost() >= 40 && !event.getPlayer().isCreative()) {
-            itemStackOut = ItemStack.EMPTY;
-        }
-
-        if (!itemStackOut.isEmpty()) {
-            int k2 = itemStackOut.getRepairCost();
-            if (!itemStackRight.isEmpty() && k2 < itemStackRight.getRepairCost()) {
-                k2 = itemStackRight.getRepairCost();
+                itemStackOut.setDisplayName(new StringTextComponent(event.getName()));
             }
 
-            if (k != i || k == 0) {
-                k2 = getNewRepairCost(k2);
+
+            if (flag && !itemStackOut.isBookEnchantable(itemStackRight)) itemStackOut = ItemStack.EMPTY;
+
+            event.setCost(j + i);
+            if (i <= 0) {
+                itemStackOut = ItemStack.EMPTY;
             }
 
-            itemStackOut.setRepairCost(k2);
-            EnchantmentHelper.setEnchantments(enchantmentsLeft, itemStackOut);
+            if (k == i && k > 0 && event.getCost() >= 40) {
+                event.setCost(39);
+            }
+
+            if (event.getCost() >= 40 && !event.getPlayer().isCreative()) {
+                itemStackOut = ItemStack.EMPTY;
+            }
+
+            if (!itemStackOut.isEmpty()) {
+                int k2 = itemStackOut.getRepairCost();
+                if (!itemStackRight.isEmpty() && k2 < itemStackRight.getRepairCost()) {
+                    k2 = itemStackRight.getRepairCost();
+                }
+
+                if (k != i || k == 0) {
+                    k2 = getNewRepairCost(k2);
+                }
+
+                itemStackOut.setRepairCost(k2);
+                setEnchantments(enchantmentsLeft, itemStackOut);
+            }
+            event.setOutput(itemStackOut);
         }
-        event.setOutput(itemStackOut);
+        return;
     }
 
     public static int getNewRepairCost(int oldRepairCost) {
         return oldRepairCost * 2 + 1;
+    }
+
+    public static void setEnchantments(Map<Enchantment, Integer> enchMap, ItemStack stack) {
+        ListNBT listnbt = new ListNBT();
+
+        for (Map.Entry<Enchantment, Integer> entry : enchMap.entrySet()) {
+            Enchantment enchantment = entry.getKey();
+            if (enchantment != null) {
+                int i = entry.getValue();
+                CompoundNBT compoundnbt = new CompoundNBT();
+                compoundnbt.putString("id", String.valueOf((Object) Registry.ENCHANTMENT.getKey(enchantment)));
+                compoundnbt.putShort("lvl", (short) i);
+                listnbt.add(compoundnbt);
+                if (stack.getItem() instanceof CustomEnchantedBookItem) {
+                    CustomEnchantedBookItem.addEnchantment(stack, new EnchantmentData(enchantment, i));
+                }
+            }
+        }
+
+        if (listnbt.isEmpty()) {
+            stack.removeChildTag("Enchantments");
+        } else if (!(stack.getItem() instanceof CustomEnchantedBookItem)) {
+            stack.setTagInfo("Enchantments", listnbt);
+        }
+    }
+
+    public static Map<Enchantment, Integer> getEnchantments(ItemStack stack) {
+        ListNBT listnbt = stack.getItem() instanceof CustomEnchantedBookItem ? CustomEnchantedBookItem.getEnchantments(stack) : stack.getEnchantmentTagList();
+        return EnchantmentHelper.deserializeEnchantments(listnbt);
     }
 
 }
