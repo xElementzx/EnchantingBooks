@@ -2,7 +2,6 @@ package me.elementz.enchantingbooks.item;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -27,7 +26,4 @@ public class CustomItemGroup extends ItemGroup {
     public ItemStack createIcon() {
         return stackSupplier.get();
     }
-
-
-    public static final ItemGroup ENCHANTING_BOOKS = new CustomItemGroup("enchanting_books", () -> new ItemStack(Items.ENCHANTED_BOOK));
 }

@@ -224,7 +224,6 @@ public class EnchantingBooks {
             }
             event.setOutput(itemStackOut);
         }
-        return;
     }
 
     public static int getNewRepairCost(int oldRepairCost) {
