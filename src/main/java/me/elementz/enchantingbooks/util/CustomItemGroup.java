@@ -1,5 +1,6 @@
-package me.elementz.enchantingbooks.item;
+package me.elementz.enchantingbooks.util;
 
+import me.elementz.enchantingbooks.item.ItemRegistration;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -26,4 +27,5 @@ public class CustomItemGroup extends ItemGroup {
     public ItemStack createIcon() {
         return stackSupplier.get();
     }
+    public static final ItemGroup ENCHANTING_BOOKS = new CustomItemGroup("enchanting_books", () -> new ItemStack(ItemRegistration.ENCHANTED_NETHERITE_BOOK.get()));
 }

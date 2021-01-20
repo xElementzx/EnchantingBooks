@@ -1,5 +1,6 @@
 package me.elementz.enchantingbooks;
 
+import me.elementz.enchantingbooks.blocks.BlockRegistration;
 import me.elementz.enchantingbooks.config.Config;
 import me.elementz.enchantingbooks.item.CustomBookItem;
 import me.elementz.enchantingbooks.item.CustomEnchantedBookItem;
@@ -50,6 +51,8 @@ public class EnchantingBooks {
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("enchantingbooks-common.toml"));
         // Register Items
         ItemRegistration.register();
+        // Register Blocks
+        BlockRegistration.register();
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
