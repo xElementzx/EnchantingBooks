@@ -4,6 +4,7 @@ import me.elementz.enchantingbooks.config.Config;
 import me.elementz.enchantingbooks.item.CustomBookItem;
 import me.elementz.enchantingbooks.item.CustomEnchantedBookItem;
 import me.elementz.enchantingbooks.item.ItemRegistration;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,6 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.EnchantmentContainer;
 import net.minecraft.inventory.container.GrindstoneContainer;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -126,7 +128,14 @@ public class EnchantingBooks {
                 return;
             }
 
-            flag = itemStackRight.getItem() instanceof CustomEnchantedBookItem && !enchantmentsRight.isEmpty();
+            if (itemStackRight.getItem() instanceof EnchantedBookItem && !enchantmentsRight.isEmpty()) {
+                flag = true;
+            } else if (itemStackRight.getItem() instanceof CustomEnchantedBookItem && !enchantmentsRight.isEmpty()) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+            //flag = itemStackRight.getItem() instanceof CustomEnchantedBookItem && !enchantmentsRight.isEmpty();
             ItemStack itemStackOut = itemStackLeft.copy();
             boolean flag2 = false;
             boolean flag3 = false;
@@ -139,7 +148,7 @@ public class EnchantingBooks {
                     int j2 = enchantmentsRight.get(enchantment1);
                     j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
                     boolean flag1 = enchantment1.canApply(itemStackOut);
-                    if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomEnchantedBookItem) {
+                    if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomEnchantedBookItem || itemStackRight.getItem() instanceof CustomEnchantedBookItem) {
                         flag1 = true;
                     }
 
@@ -251,20 +260,27 @@ public class EnchantingBooks {
                 listnbt.add(compoundnbt);
                 if (stack.getItem() instanceof CustomEnchantedBookItem) {
                     CustomEnchantedBookItem.addEnchantment(stack, new EnchantmentData(enchantment, i));
+                } else if (stack.getItem() instanceof EnchantedBookItem) {
+                    EnchantedBookItem.addEnchantment(stack, new EnchantmentData(enchantment, i));
                 }
             }
         }
 
         if (listnbt.isEmpty()) {
             stack.removeChildTag("Enchantments");
-        } else if (!(stack.getItem() instanceof CustomEnchantedBookItem)) {
+        } else if (!(stack.getItem() instanceof CustomEnchantedBookItem) && !(stack.getItem() instanceof EnchantedBookItem)) {
             stack.setTagInfo("Enchantments", listnbt);
         }
     }
 
     public static Map<Enchantment, Integer> getEnchantments(ItemStack stack) {
-        ListNBT listnbt = stack.getItem() instanceof CustomEnchantedBookItem ? CustomEnchantedBookItem.getEnchantments(stack) : stack.getEnchantmentTagList();
-        return EnchantmentHelper.deserializeEnchantments(listnbt);
+        if (stack.getItem() instanceof CustomEnchantedBookItem) {
+            ListNBT listnbt = stack.getItem() instanceof CustomEnchantedBookItem ? CustomEnchantedBookItem.getEnchantments(stack) : stack.getEnchantmentTagList();
+            return EnchantmentHelper.deserializeEnchantments(listnbt);
+        } else {
+            ListNBT listnbt = stack.getItem() instanceof EnchantedBookItem ? EnchantedBookItem.getEnchantments(stack) : stack.getEnchantmentTagList();
+            return EnchantmentHelper.deserializeEnchantments(listnbt);
+        }
     }
 
 }
