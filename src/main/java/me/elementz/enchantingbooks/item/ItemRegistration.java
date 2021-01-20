@@ -1,6 +1,7 @@
 package me.elementz.enchantingbooks.item;
 
 import me.elementz.enchantingbooks.EnchantingBooks;
+import me.elementz.enchantingbooks.config.Config;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -16,16 +17,16 @@ public class ItemRegistration {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, EnchantingBooks.ID);
 
     public static final RegistryObject<Item> NETHERITE_BOOK = ITEMS.register("netherite_book", () ->
-            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), 150));
+            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), Config.NETHERITE_BOOK_ENCHANTABILITY.get()));
 
     public static final RegistryObject<Item> DIAMOND_BOOK = ITEMS.register("diamond_book", () ->
-            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), 100));
+            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), Config.DIAMOND_BOOK_ENCHANTABILITY.get()));
 
     public static final RegistryObject<Item> GOLD_BOOK = ITEMS.register("gold_book", () ->
-            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), 50));
+            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), Config.GOLD_BOOK_ENCHANTABILITY.get()));
 
     public static final RegistryObject<Item> IRON_BOOK = ITEMS.register("iron_book", () ->
-            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), 20));
+            new CustomBookItem(new Item.Properties().group(ItemRegistration.ENCHANTING_BOOKS), Config.IRON_BOOK_ENCHANTABILITY.get()));
 
     public static final RegistryObject<Item> ENCHANTED_NETHERITE_BOOK = ITEMS.register("enchanted_netherite_book", () ->
             new CustomEnchantedBookItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON)));
