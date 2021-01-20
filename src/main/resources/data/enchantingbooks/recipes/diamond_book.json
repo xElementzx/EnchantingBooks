@@ -1,22 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern":
-  [
-    "xxx",
-    "xa ",
-    "x x"
-  ],
-  "key":
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
   {
-    "x":
-    {
-      "tag": "forge:gems/diamond"
-    },
-    "a":
-    {
-      "item": "minecraft:book"
-    }
+    "tag": "forge:gems/diamond"
   },
+  {
+    "tag": "forge:gems/diamond"
+  },
+  {
+    "item": "minecraft:book"
+  }
+  ],
   "result":
   {
     "item": "enchantingbooks:diamond_book",
