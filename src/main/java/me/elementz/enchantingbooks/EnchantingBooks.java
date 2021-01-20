@@ -1,0 +1,234 @@
+package me.elementz.enchantingbooks;
+
+import me.elementz.enchantingbooks.item.CustomBookItem;
+import me.elementz.enchantingbooks.item.ItemRegistration;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.inventory.container.EnchantmentContainer;
+import net.minecraft.inventory.container.GrindstoneContainer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+
+// The value here should match an entry in the META-INF/mods.toml file
+@Mod(EnchantingBooks.ID)
+public class EnchantingBooks {
+
+    public static final String ID = "enchantingbooks";
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    public EnchantingBooks() {
+
+        ItemRegistration.register();
+        // Register the setup method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // Register the doClientStuff method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void setup(final FMLCommonSetupEvent event) {
+        // some preinit code
+        LOGGER.info("[Enchanting Books] - PreInit");
+    }
+
+    private void doClientStuff(final FMLClientSetupEvent event) {
+        // do something that can only be done on the client
+//        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+    }
+
+    // You can use SubscribeEvent and let the Event Bus discover methods to call
+    @SubscribeEvent
+    public void onServerStarting(FMLServerStartingEvent event) {
+        // do something when the server starts
+        LOGGER.info("[Enchanting Books] - Server Starting");
+    }
+
+    @SubscribeEvent
+    public void onEnchantmentChange(PlayerContainerEvent.Open event) {
+        if (!(event.getContainer() instanceof EnchantmentContainer)) {
+            return;
+        }
+
+//        EnchantmentContainer container = (EnchantmentContainer) event.getContainer();
+//        Slot slot = container.inventorySlots.get(0);
+//        Inventory inventory = (Inventory) slot.inventory;
+//        inventory.addListener(invBasic -> {
+//            ItemStack itemStack = invBasic.getStackInSlot(0);
+//            if (!(itemStack.getItem() instanceof CustomBookItem) || !itemStack.isEnchanted()) {
+//                return;
+//            }
+//
+//            Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
+////            ListNBT listnbt = new ListNBT();
+////
+////            for(Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+////                Enchantment enchantment = entry.getKey();
+////                if (enchantment != null) {
+////                    int i = entry.getValue();
+////                    CompoundNBT compoundnbt = new CompoundNBT();
+////                    compoundnbt.putString("id", String.valueOf((Object) Registry.ENCHANTMENT.getKey(enchantment)));
+////                    compoundnbt.putShort("lvl", (short)i);
+////                    listnbt.add(compoundnbt);
+////                    if (itemStack.getItem() instanceof EnchantedBookItem) {
+////                        EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, i));
+////                    }
+////                }
+////            }
+//            ItemStack newItemStackCauseFuckYouMojang = new ItemStack(Items.ENCHANTED_BOOK, 1);
+//            EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(itemStack), newItemStackCauseFuckYouMojang);
+//            invBasic.setInventorySlotContents(0, newItemStackCauseFuckYouMojang);
+//        });
+    }
+
+    @SubscribeEvent
+    public void onGrindstoneChange(PlayerContainerEvent.Open event) {
+        if (!(event.getContainer() instanceof GrindstoneContainer)) {
+            return;
+        }
+    }
+
+    @SubscribeEvent
+    public void onAnvilChange(AnvilUpdateEvent event) {
+        ItemStack itemStackLeft = event.getLeft();
+        ItemStack itemStackRight = event.getRight();
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        boolean flag = false;
+        if (!(itemStackRight.getItem() instanceof CustomBookItem)) {
+            return;
+        }
+
+        Map<Enchantment, Integer> enchantmentsLeft = EnchantmentHelper.getEnchantments(itemStackLeft);
+        Map<Enchantment, Integer> enchantmentsRight = EnchantmentHelper.getEnchantments(itemStackRight);
+        if (enchantmentsRight.isEmpty()) {
+            return;
+        }
+
+        flag = itemStackRight.getItem() instanceof CustomBookItem && !enchantmentsRight.isEmpty();
+        ItemStack itemStackOut = itemStackLeft.copy();
+        boolean flag2 = false;
+        boolean flag3 = false;
+
+        j = j + itemStackOut.getRepairCost() + (itemStackRight.isEmpty() ? 0 : itemStackRight.getRepairCost());
+
+        for (Enchantment enchantment1 : enchantmentsRight.keySet()) {
+            if (enchantment1 != null) {
+                int i2 = enchantmentsLeft.getOrDefault(enchantment1, 0);
+                int j2 = enchantmentsRight.get(enchantment1);
+                j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
+                boolean flag1 = enchantment1.canApply(itemStackOut);
+                if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomBookItem) {
+                    flag1 = true;
+                }
+
+                for (Enchantment enchantment : enchantmentsLeft.keySet()) {
+                    if (enchantment != enchantment1 && !enchantment1.isCompatibleWith(enchantment)) {
+                        flag1 = false;
+                        ++i;
+                    }
+                }
+
+                if (!flag1) {
+                    flag3 = true;
+                } else {
+                    flag2 = true;
+                    if (j2 > enchantment1.getMaxLevel()) {
+                        j2 = enchantment1.getMaxLevel();
+                    }
+
+                    enchantmentsLeft.put(enchantment1, j2);
+                    int k3 = 0;
+                    switch (enchantment1.getRarity()) {
+                        case COMMON:
+                            k3 = 1;
+                            break;
+                        case UNCOMMON:
+                            k3 = 2;
+                            break;
+                        case RARE:
+                            k3 = 4;
+                            break;
+                        case VERY_RARE:
+                            k3 = 8;
+                    }
+
+                    if (flag) {
+                        k3 = Math.max(1, k3 / 2);
+                    }
+
+                    i += k3 * j2;
+                    if (itemStackOut.getCount() > 1) {
+                        i = 40;
+                    }
+                }
+            }
+        }
+        if (flag3 && !flag2) {
+            return;
+        }
+
+        if (StringUtils.isBlank(event.getName())) {
+            if (itemStackOut.hasDisplayName()) {
+                k = 1;
+                i += k;
+                itemStackOut.clearCustomName();
+            }
+        } else if (!event.getName().equals(itemStackOut.getDisplayName().getString())) {
+            k = 1;
+            i += k;
+            itemStackOut.setDisplayName(new StringTextComponent(event.getName()));
+        }
+
+
+        if (flag && !itemStackOut.isBookEnchantable(itemStackRight)) itemStackOut = ItemStack.EMPTY;
+
+        event.setCost(j + i);
+        if (i <= 0) {
+            itemStackOut = ItemStack.EMPTY;
+        }
+
+        if (k == i && k > 0 && event.getCost() >= 40) {
+            event.setCost(39);
+        }
+
+        if (event.getCost() >= 40 && !event.getPlayer().isCreative()) {
+            itemStackOut = ItemStack.EMPTY;
+        }
+
+        if (!itemStackOut.isEmpty()) {
+            int k2 = itemStackOut.getRepairCost();
+            if (!itemStackRight.isEmpty() && k2 < itemStackRight.getRepairCost()) {
+                k2 = itemStackRight.getRepairCost();
+            }
+
+            if (k != i || k == 0) {
+                k2 = getNewRepairCost(k2);
+            }
+
+            itemStackOut.setRepairCost(k2);
+            EnchantmentHelper.setEnchantments(enchantmentsLeft, itemStackOut);
+        }
+        event.setOutput(itemStackOut);
+    }
+
+    public static int getNewRepairCost(int oldRepairCost) {
+        return oldRepairCost * 2 + 1;
+    }
+
+}

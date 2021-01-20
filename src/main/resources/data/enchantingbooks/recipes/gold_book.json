@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxx",
+    "xa ",
+    "x x"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "tag": "forge:ingots/gold"
+    },
+    "a":
+    {
+      "item": "minecraft:book"
+    }
+  },
+  "result":
+  {
+    "item": "enchantingbooks:gold_book",
+    "count": 1
+  }
+}
