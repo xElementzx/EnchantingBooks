@@ -2,17 +2,23 @@ buildscript {
     repositories {
         jcenter()
         maven {
+            name = "gradle"
+            url = "https://plugins.gradle.org/m2"
+        }
+        maven {
             name = "minecraftforge"
             url = "https://files.minecraftforge.net/maven"
         }
     }
 
     dependencies {
+        classpath("gradle.plugin.net.kyori:blossom:1.1.0")
         classpath("net.minecraftforge.gradle:ForgeGradle:3.+")
     }
 }
 
 apply plugin: "java"
+apply plugin: "net.kyori.blossom"
 apply plugin: "net.minecraftforge.gradle"
 
 sourceCompatibility = 1.8
@@ -21,6 +27,10 @@ targetCompatibility = 1.8
 group = "me.elementz"
 archivesBaseName = "enchantingbooks"
 version = "1.1.0"
+
+blossom {
+    replaceToken("@version@", version)
+}
 
 minecraft {
     mappings channel: 'snapshot', version: '20201028-1.16.3'
