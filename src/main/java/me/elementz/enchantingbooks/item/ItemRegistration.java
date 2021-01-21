@@ -21,8 +21,8 @@ public class ItemRegistration {
     public static final RegistryObject<Item> DIAMOND_BOOK = ITEMS.register("diamond_book", () ->
             new CustomBookItem(new Item.Properties().group(CustomItemGroup.ENCHANTING_BOOKS), Config.DIAMOND_BOOK_ENCHANTABILITY.get()));
 
-    public static final RegistryObject<Item> GOLD_BOOK = ITEMS.register("gold_book", () ->
-            new CustomBookItem(new Item.Properties().group(CustomItemGroup.ENCHANTING_BOOKS), Config.GOLD_BOOK_ENCHANTABILITY.get()));
+    public static final RegistryObject<Item> GOLDEN_BOOK = ITEMS.register("golden_book", () ->
+            new CustomBookItem(new Item.Properties().group(CustomItemGroup.ENCHANTING_BOOKS), Config.GOLDEN_BOOK_ENCHANTABILITY.get()));
 
     public static final RegistryObject<Item> IRON_BOOK = ITEMS.register("iron_book", () ->
             new CustomBookItem(new Item.Properties().group(CustomItemGroup.ENCHANTING_BOOKS), Config.IRON_BOOK_ENCHANTABILITY.get()));
@@ -33,7 +33,7 @@ public class ItemRegistration {
     public static final RegistryObject<Item> ENCHANTED_DIAMOND_BOOK = ITEMS.register("enchanted_diamond_book", () ->
             new CustomEnchantedBookItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON)));
 
-    public static final RegistryObject<Item> ENCHANTED_GOLD_BOOK = ITEMS.register("enchanted_gold_book", () ->
+    public static final RegistryObject<Item> ENCHANTED_GOLDEN_BOOK = ITEMS.register("enchanted_golden_book", () ->
             new CustomEnchantedBookItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON)));
 
     public static final RegistryObject<Item> ENCHANTED_IRON_BOOK = ITEMS.register("enchanted_iron_book", () ->

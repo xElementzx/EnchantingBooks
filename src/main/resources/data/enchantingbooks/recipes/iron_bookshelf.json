@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/iron"
+    },
+    {
+      "tag": "forge:ingots/iron"
+    },
+    {
+      "item": "minecraft:bookshelf"
+    }
+  ],
+  "result":
+  {
+    "item": "enchantingbooks:iron_bookshelf",
+    "count": 1
+  }
+}

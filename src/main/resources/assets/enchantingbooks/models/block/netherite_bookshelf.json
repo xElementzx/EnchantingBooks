@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "minecraft:block/netherite_block",
+    "side": "enchantingbooks:block/netherite_bookshelf"
+  }
+}

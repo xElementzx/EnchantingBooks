@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+  {
+    "tag": "forge:gems/diamond"
+  },
+  {
+    "tag": "forge:gems/diamond"
+  },
+  {
+    "item": "minecraft:bookshelf"
+  }
+  ],
+  "result":
+  {
+    "item": "enchantingbooks:diamond_bookshelf",
+    "count": 1
+  }
+}

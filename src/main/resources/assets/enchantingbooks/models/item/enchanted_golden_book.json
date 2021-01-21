@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "enchantingbooks:item/gold_book"
+    "layer0": "enchantingbooks:item/enchanted_golden_book"
   }
 }

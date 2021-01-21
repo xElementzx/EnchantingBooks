@@ -5,7 +5,6 @@ import me.elementz.enchantingbooks.config.Config;
 import me.elementz.enchantingbooks.item.CustomBookItem;
 import me.elementz.enchantingbooks.item.CustomEnchantedBookItem;
 import me.elementz.enchantingbooks.item.ItemRegistration;
-import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -45,7 +44,6 @@ public class EnchantingBooks {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public EnchantingBooks() {
-
         // Load the config
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve("enchantingbooks-common.toml"));
@@ -96,8 +94,8 @@ public class EnchantingBooks {
             Map<Enchantment, Integer> enchantments = getEnchantments(itemStack);
             if (itemStack.getItem() == ItemRegistration.IRON_BOOK.get()) {
                 itemStack = new ItemStack(ItemRegistration.ENCHANTED_IRON_BOOK.get(), 1);
-            } else if (itemStack.getItem() == ItemRegistration.GOLD_BOOK.get()) {
-                itemStack = new ItemStack(ItemRegistration.ENCHANTED_GOLD_BOOK.get(), 1);
+            } else if (itemStack.getItem() == ItemRegistration.GOLDEN_BOOK.get()) {
+                itemStack = new ItemStack(ItemRegistration.ENCHANTED_GOLDEN_BOOK.get(), 1);
             } else if (itemStack.getItem() == ItemRegistration.DIAMOND_BOOK.get()) {
                 itemStack = new ItemStack(ItemRegistration.ENCHANTED_DIAMOND_BOOK.get(), 1);
             } else if (itemStack.getItem() == ItemRegistration.NETHERITE_BOOK.get()) {
