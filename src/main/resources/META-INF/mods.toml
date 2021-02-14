@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[35,36, )"
+loaderVersion="[35,)"
 license="Apache-2.0"
 issueTrackerURL="https://github.com/xElementzx/EnchantingBooks/issues"
 
@@ -16,3 +16,17 @@ This is a mod designed to give more variety to the vanilla enchanted books by ad
 
 Source - https://github.com/xElementzx/EnchantingBooks
 '''
+
+[[dependencies.enchantingbooks]]
+modId="forge"
+mandatory=true
+versionRange="[35.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.enchantingbooks]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16,)"
+ordering="NONE"
+side="BOTH"
