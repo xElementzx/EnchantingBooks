@@ -15,8 +15,8 @@ public class Config {
     public static final String CATEGORY_BOOKS = "books";
     public static final String CATEGORY_BLOCKS = "blocks";
     public static final ForgeConfigSpec.Builder COMMON = new ForgeConfigSpec.Builder();
-    public static ForgeConfigSpec COMMON_CONFIG;
 
+    public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec.IntValue NETHERITE_BOOK_ENCHANTABILITY;
     public static ForgeConfigSpec.IntValue DIAMOND_BOOK_ENCHANTABILITY;
     public static ForgeConfigSpec.IntValue GOLDEN_BOOK_ENCHANTABILITY;
