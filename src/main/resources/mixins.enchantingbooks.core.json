@@ -1,0 +1,20 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "me.elementz.enchantingbooks.mixin.core",
+  "refmap": "mixins.enchantingbooks.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "enchantment.EnchantmentHelperMixin",
+    "inventory.container.GrindstoneContainer_2Mixin",
+    "inventory.container.GrindstoneContainer_3Mixin",
+    "inventory.container.GrindstoneContainerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "conformVisibility": true
+  }
+}

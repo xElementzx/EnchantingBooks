@@ -9,17 +9,23 @@ buildscript {
             name = "minecraftforge"
             url = "https://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "spongepowered"
+            url = "https://repo.spongepowered.org/maven"
+        }
     }
 
     dependencies {
         classpath("gradle.plugin.net.kyori:blossom:1.1.0")
         classpath("net.minecraftforge.gradle:ForgeGradle:3.+")
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
     }
 }
 
 apply plugin: "java"
 apply plugin: "net.kyori.blossom"
 apply plugin: "net.minecraftforge.gradle"
+apply plugin: "org.spongepowered.mixin"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -71,12 +77,18 @@ minecraft {
     }
 }
 
+mixin {
+    disableRefMapWarning = true
+    add(sourceSets.main, "mixins.enchantingbooks.refmap.json")
+}
+
 repositories {
     jcenter()
 }
 
 dependencies {
     minecraft("net.minecraftforge:forge:1.16.5-36.0.1")
+    annotationProcessor("org.spongepowered:mixin:0.8.2:processor")
 }
 
 jar {
@@ -86,6 +98,7 @@ jar {
                 "Implementation-Title": "EnchantingBooks",
                 "Implementation-Vendor": "xElementzx",
                 "Implementation-Version": "${project.version}",
+                "MixinConfigs": "mixins.enchantingbooks.core.json",
                 "Specification-Title": "enchantingbooks",
                 "Specification-Vendor": "xElementzx",
                 "Specification-Version": "1"
