@@ -134,7 +134,7 @@ public class EnchantingBooks {
                     int j2 = enchantmentsRight.get(enchantment1);
                     j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
                     boolean flag1 = enchantment1.canApply(itemStackOut);
-                    if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomEnchantedBookItem || itemStackRight.getItem() instanceof CustomEnchantedBookItem) {
+                    if (event.getPlayer().isCreative() || itemStackLeft.getItem() instanceof CustomEnchantedBookItem || itemStackLeft.getItem() instanceof EnchantedBookItem) {
                         flag1 = true;
                     }
 
